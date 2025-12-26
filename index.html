@@ -1228,8 +1228,9 @@
   const tabFromURL = urlParams.get('tab');
 
   if (tabFromURL) {
-    const targetLink = document.querySelector(`.tab-link[data-target="${tabFromURL}"]`);
-    if (targetLink) targetLink.click(); // تفعيل التبويب المطلوب
+    activateTab(tabFromURL);
+  } else {
+    activateTab('home'); // الافتراضي
   }
 
   // تمييز المقال المختار عند الضغط
