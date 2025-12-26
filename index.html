@@ -1199,33 +1199,50 @@
 
 <script>
   // تأكيد تحميل الكتب
-  function confirmDownload(url) {
+ function confirmDownload(url) {
     const ok = confirm('هذا الكتاب لمن أراد الانتفاع به ولا يسمح بطباعته للمتاجرة فيه');
-    if(ok) { window.location.href = url; }
+    if (ok) {
+      window.location.href = url;
+    }
     return false;
   }
 
-  // تبديل التبويبات
+  // =============================
+  // التبويبات (Navigation Tabs)
+  // =============================
   const tabLinks = document.querySelectorAll('.tab-link');
   const tabContents = document.querySelectorAll('.tab-content');
 
+  function activateTab(tabName) {
+    // تفعيل الرابط
+    tabLinks.forEach(link => {
+      link.classList.toggle('active', link.dataset.target === tabName);
+    });
+
+    // تفعيل المحتوى
+    tabContents.forEach(section => {
+      section.classList.toggle('active', section.id === tabName);
+    });
+  }
+
+  // عند الضغط على التبويبات
   tabLinks.forEach(link => {
-    link.addEventListener('click', function(e){
+    link.addEventListener('click', function (e) {
       e.preventDefault();
       const target = this.dataset.target;
 
-      tabLinks.forEach(l => l.classList.remove('active'));
-      this.classList.add('active');
+      activateTab(target);
 
-      tabContents.forEach(tc => {
-        tc.classList.toggle('active', tc.id === target);
-      });
+      // تحديث الرابط بدون إعادة تحميل
+      history.pushState(null, '', `?tab=${target}`);
     });
   });
 
-  // قراءة التبويب المطلوب من الرابط
-  const urlParams = new URLSearchParams(window.location.search);
-  const tabFromURL = urlParams.get('tab');
+  // =============================
+  // قراءة التبويب من الرابط ?tab=
+  // =============================
+  const params = new URLSearchParams(window.location.search);
+  const tabFromURL = params.get('tab');
 
   if (tabFromURL) {
     activateTab(tabFromURL);
